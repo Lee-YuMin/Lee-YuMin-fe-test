@@ -1,24 +1,56 @@
-import Link from 'next/link';
-import type { NextPage } from 'next';
-import React from 'react';
-import styled from 'styled-components';
+import Link from "next/link";
+import type { NextPage } from "next";
+import React, { useContext, useEffect } from "react";
+import styled from "styled-components";
+import { WrapperContext } from "../components/WrapperContext";
+import API from "../utilities/api";
+import STORAGE from "../utilities/storage";
 
 const HomePage: NextPage = () => {
+  const { isLogined, token, setIsLogined, setToken, userName, setUserName } =
+    useContext(WrapperContext);
+
+  useEffect(() => {
+    const userData = STORAGE.get("user_data");
+
+    if (isLogined === false && userData?.user.ID && userData?.accessToken) {
+      API.get(`/users/${userData?.user.ID}`).then(function (res) {
+        setIsLogined(true);
+        setToken(userData.accessToken);
+        setUserName(res.data.data.user.NAME);
+      });
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem("user_data");
+    setToken("");
+    setIsLogined(false);
+    setUserName("");
+  };
+
   return (
     <>
       <Header>
-        <Link href='/'>
+        <Link href="/">
           <Title>HAUS</Title>
         </Link>
-        <Link href='/login'>
-          <p>login</p>
-        </Link>
+        {isLogined ? (
+          <UserWrapper>
+            <UserName>{userName}</UserName>
+            <Link href="#" onClick={logout}>
+              로그아웃
+            </Link>
+          </UserWrapper>
+        ) : (
+          <Link href="/login">login</Link>
+        )}
       </Header>
       <Container>
-        <Link href='/pagination?page=1'>
+        <Link href="/pagination?page=1">
           <StyledLink>pagination</StyledLink>
         </Link>
-        <Link href='/infinite-scroll'>
+        <Link href="/infinite-scroll">
           <StyledLink>infinite scroll</StyledLink>
         </Link>
       </Container>
@@ -28,7 +60,7 @@ const HomePage: NextPage = () => {
 
 export default HomePage;
 
-const Header = styled.div`
+const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -39,7 +71,7 @@ const Title = styled.a`
   font-size: 48px;
 `;
 
-const Container = styled.div`
+const Container = styled.main`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,3 +94,6 @@ const StyledLink = styled.a`
     margin-top: 40px;
   }
 `;
+
+const UserWrapper = styled.div``;
+const UserName = styled.div``;

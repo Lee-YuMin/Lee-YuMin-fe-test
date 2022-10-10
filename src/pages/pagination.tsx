@@ -1,12 +1,12 @@
-import { useRouter } from 'next/router';
-import Link from 'next/link';
-import type { NextPage } from 'next';
-import React from 'react';
-import styled from 'styled-components';
+import { useRouter } from "next/router";
+import Link from "next/link";
+import type { NextPage } from "next";
+import React from "react";
+import styled from "styled-components";
 
-import products from '../api/data/products.json';
-import ProductList from '../components/ProductList';
-import Pagination from '../components/Pagination';
+import products from "../api/data/products.json";
+import ProductList from "../components/ProductList";
+import Pagination from "../components/Pagination";
 
 const PaginationPage: NextPage = () => {
   const router = useRouter();
@@ -15,10 +15,10 @@ const PaginationPage: NextPage = () => {
   return (
     <>
       <Header>
-        <Link href='/'>
+        <Link href="/">
           <Title>HAUS</Title>
         </Link>
-        <Link href='/login'>
+        <Link href="/login">
           <p>login</p>
         </Link>
       </Header>
@@ -32,7 +32,7 @@ const PaginationPage: NextPage = () => {
 
 export default PaginationPage;
 
-const Header = styled.div`
+const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,7 +43,7 @@ const Title = styled.a`
   font-size: 48px;
 `;
 
-const Container = styled.div`
+const Container = styled.main`
   display: flex;
   flex-direction: column;
   align-items: center;
