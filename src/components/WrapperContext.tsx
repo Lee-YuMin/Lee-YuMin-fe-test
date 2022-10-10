@@ -1,4 +1,6 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, { createContext, ReactNode, useState, useEffect } from "react";
+import API from "../utilities/api";
+import STORAGE from "../utilities/storage";
 
 interface WrapperContextProps {
   isLogined: boolean;
@@ -6,29 +8,47 @@ interface WrapperContextProps {
   children: ReactNode;
 }
 
+interface UserInfo {
+  isLogined: boolean;
+  token: string;
+  userName: string;
+}
+
 export const WrapperContext = createContext({
-  isLogined: false,
-  setIsLogined: (isLogined: boolean) => {},
-  token: "",
-  setToken: (token: string) => {},
-  userName: "",
-  setUserName: (userName: string) => {},
+  userInfo: { isLogined: false, token: "", userName: "" },
+  setUserInfo: (userInfo: UserInfo) => {},
 });
 
 const Wrapper = (props: WrapperContextProps) => {
-  const [isLogined, setIsLogined] = useState<boolean>(props.isLogined);
-  const [token, setToken] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<UserInfo>({
+    isLogined: false,
+    token: "",
+    userName: "",
+  });
+
+  useEffect(() => {
+    const storedUserInfo = STORAGE.get("user_info");
+
+    if (
+      userInfo?.isLogined === false &&
+      storedUserInfo?.user.ID &&
+      storedUserInfo?.accessToken
+    ) {
+      API.get(`/users/${storedUserInfo?.user.ID}`).then(function (res) {
+        setUserInfo({
+          isLogined: true,
+          token: storedUserInfo.accessToken,
+          userName: res.data.data.user.NAME,
+        });
+      });
+    }
+  }, []);
 
   return (
     <WrapperContext.Provider
       value={{
-        isLogined,
-        setIsLogined,
-        token,
-        setToken,
-        userName,
-        setUserName,
+        userInfo,
+        setUserInfo,
       }}
     >
       {props.children}

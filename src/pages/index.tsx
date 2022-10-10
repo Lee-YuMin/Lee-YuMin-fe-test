@@ -3,49 +3,34 @@ import type { NextPage } from "next";
 import React, { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { WrapperContext } from "../components/WrapperContext";
+import Header from "../components/Header";
 import API from "../utilities/api";
 import STORAGE from "../utilities/storage";
 
 const HomePage: NextPage = () => {
-  const { isLogined, token, setIsLogined, setToken, userName, setUserName } =
-    useContext(WrapperContext);
+  const { userInfo, setUserInfo } = useContext(WrapperContext);
 
   useEffect(() => {
-    const userData = STORAGE.get("user_data");
+    const userInfo = STORAGE.get("user_data");
 
-    if (isLogined === false && userData?.user.ID && userData?.accessToken) {
-      API.get(`/users/${userData?.user.ID}`).then(function (res) {
-        setIsLogined(true);
-        setToken(userData.accessToken);
-        setUserName(res.data.data.user.NAME);
+    if (
+      userInfo?.isLogined === false &&
+      userInfo?.user.ID &&
+      userInfo?.accessToken
+    ) {
+      API.get(`/users/${userInfo?.user.ID}`).then(function (res) {
+        setUserInfo({
+          isLogined: true,
+          token: userInfo.accessToken,
+          userName: res.data.data.user.NAME,
+        });
       });
     }
   }, []);
 
-  const logout = () => {
-    localStorage.removeItem("user_data");
-    setToken("");
-    setIsLogined(false);
-    setUserName("");
-  };
-
   return (
     <>
-      <Header>
-        <Link href="/">
-          <Title>HAUS</Title>
-        </Link>
-        {isLogined ? (
-          <UserWrapper>
-            <UserName>{userName}</UserName>
-            <Link href="#" onClick={logout}>
-              로그아웃
-            </Link>
-          </UserWrapper>
-        ) : (
-          <Link href="/login">login</Link>
-        )}
-      </Header>
+      <Header userInfo={userInfo} setUserInfo={setUserInfo} />
       <Container>
         <Link href="/pagination?page=1">
           <StyledLink>pagination</StyledLink>
@@ -59,17 +44,6 @@ const HomePage: NextPage = () => {
 };
 
 export default HomePage;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-`;
-
-const Title = styled.a`
-  font-size: 48px;
-`;
 
 const Container = styled.main`
   display: flex;
@@ -94,6 +68,3 @@ const StyledLink = styled.a`
     margin-top: 40px;
   }
 `;
-
-const UserWrapper = styled.div``;
-const UserName = styled.div``;

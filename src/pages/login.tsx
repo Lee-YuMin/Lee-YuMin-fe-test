@@ -4,6 +4,7 @@ import type { NextPage } from "next";
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import API from "../utilities/api";
+import Header from "../components/Header";
 import STORAGE from "../utilities/storage";
 import { WrapperContext } from "../components/WrapperContext";
 
@@ -14,7 +15,12 @@ interface InputVaild {
 
 const LoginPage: NextPage = () => {
   const router = useRouter();
-  const { setToken, setUserName, setIsLogined } = useContext(WrapperContext);
+  const { userInfo, setUserInfo } = useContext(WrapperContext);
+
+  // 로그인 체크
+  if (userInfo.isLogined === true) {
+    router.push("/");
+  }
 
   const [validId, setValidId] = useState<InputVaild>({
     isValid: true,
@@ -64,22 +70,19 @@ const LoginPage: NextPage = () => {
         password: validPasswd.value,
       },
     }).then(function (res) {
-      STORAGE.set("user_data", res.data.data);
-      setToken(res.data.data.accessToken);
-      setUserName(res.data.data.user.NAME);
-      setIsLogined(true);
+      STORAGE.set("user_info", res.data.data);
+      setUserInfo({
+        isLogined: true,
+        token: res.data.data.accessToken,
+        userName: res.data.data.user.NAME,
+      });
       router.push("/");
     });
   };
 
   return (
     <>
-      <Header>
-        <Link href="/">
-          <Title>HAUS</Title>
-        </Link>
-        <Link href="/login">login</Link>
-      </Header>
+      <Header userInfo={userInfo} setUserInfo={setUserInfo} />
       <Form>
         <FormElementName>아이디</FormElementName>
         <TextInput
@@ -112,17 +115,6 @@ const LoginPage: NextPage = () => {
 };
 
 export default LoginPage;
-
-const Header = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-`;
-
-const Title = styled.a`
-  font-size: 48px;
-`;
 
 const Form = styled.main`
   display: flex;

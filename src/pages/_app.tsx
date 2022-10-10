@@ -1,3 +1,4 @@
+import { useContext, useEffect, useState } from "react";
 import type { AppProps } from "next/app";
 import styled from "styled-components";
 
