@@ -4,8 +4,8 @@ import type { NextPage } from "next";
 import React, { useState, useContext } from "react";
 import styled from "styled-components";
 import API from "../utilities/api";
-import Header from "../components/Header";
 import STORAGE from "../utilities/storage";
+import Header from "../components/Header";
 import { WrapperContext } from "../components/WrapperContext";
 
 interface InputVaild {
