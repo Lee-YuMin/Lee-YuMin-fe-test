@@ -59,7 +59,7 @@ const Thumbnail = styled.img`
   height: 420px;
 `;
 
-const ProductInfoWrapper = styled.div`
+const ProductInfoWrapper = styled.main`
   margin-top: 20px;
   padding: 0 20px;
 `;

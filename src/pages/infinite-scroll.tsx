@@ -27,8 +27,8 @@ const InfiniteScrollPage: NextPage = () => {
 
   const getProductList = useCallback(async (page: number) => {
     if (!page) return;
-    const res = await API.get(`/products?page=${page}&size=10`);
-    totalPage.current = Math.ceil(res?.data?.data?.totalCount / 10);
+    const res = await API.get(`/products?page=${page}&size=16`);
+    totalPage.current = Math.ceil(res?.data?.data?.totalCount / 16);
 
     return res?.data?.data?.products || [];
   }, []);
