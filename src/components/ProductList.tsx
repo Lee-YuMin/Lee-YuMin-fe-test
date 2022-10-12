@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
-import { Product } from '../types/product';
-import ProductItem from './ProductItem';
+import { Product } from "../types/product";
+import ProductItem from "./ProductItem";
 
 type ProductListProps = {
   products: Product[];
@@ -10,14 +10,14 @@ type ProductListProps = {
 const ProductList = ({ products }: ProductListProps) => (
   <Container>
     {products.map((product) => (
-      <ProductItem key={product.id} product={product} />
+      <ProductItem key={product.id} product={product} id={product.id} />
     ))}
   </Container>
 );
 
 export default ProductList;
 
-const Container = styled.div`
+const Container = styled.section`
   display: flex;
   flex-wrap: wrap;
   width: 400px;

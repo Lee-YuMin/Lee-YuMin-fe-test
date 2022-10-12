@@ -1,17 +1,25 @@
-import styled from 'styled-components';
+import styled from "styled-components";
+import Link from "next/link";
 
-import { Product } from '../types/product';
+import { Product } from "../types/product";
+import { NUMBER } from "../utilities/util";
 
 type ProductItemProps = {
   product: Product;
+  id: number;
 };
 
-const ProductItem = ({ product: { name, thumbnail, price } }: ProductItemProps) => (
-  <Container>
-    <Thumbnail src={thumbnail ? thumbnail : '/defaultThumbnail.jpg'} />
-    <Name>{name}</Name>
-    <Price>{price}</Price>
-  </Container>
+const ProductItem = ({
+  product: { name, thumbnail, price },
+  id,
+}: ProductItemProps) => (
+  <Link href={`/products/${id}`}>
+    <Container>
+      <Thumbnail src={thumbnail ? thumbnail : "/defaultThumbnail.jpg"} />
+      <Name>{name}</Name>
+      <Price>{NUMBER.COMMA(price)}</Price>
+    </Container>
+  </Link>
 );
 
 export default ProductItem;

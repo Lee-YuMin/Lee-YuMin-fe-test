@@ -1,8 +1,10 @@
-import type { AppProps } from 'next/app';
-import styled from 'styled-components';
+import { useContext, useEffect, useState } from "react";
+import type { AppProps } from "next/app";
+import styled from "styled-components";
 
-import setupMSW from '../api/setup';
-import GlobalStyle from '../styles/GlobalStyle';
+import setupMSW from "../api/setup";
+import GlobalStyle from "../styles/GlobalStyle";
+import WrapperContext from "../components/WrapperContext";
 
 setupMSW();
 
@@ -11,9 +13,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <GlobalStyle />
       <Background />
-      <Content>
-        <Component {...pageProps} />
-      </Content>
+      <WrapperContext isLogined={false} token="">
+        <Content>
+          <Component {...pageProps} />
+        </Content>
+      </WrapperContext>
     </>
   );
 }

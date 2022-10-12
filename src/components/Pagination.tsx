@@ -1,21 +1,54 @@
-import React from 'react';
-import styled from 'styled-components';
-import { VscChevronLeft, VscChevronRight } from 'react-icons/vsc';
+import React from "react";
+import styled from "styled-components";
+import { VscChevronLeft, VscChevronRight } from "react-icons/vsc";
 
-const Pagination = () => {
+interface PaginationProps {
+  totalPage: number;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<any>>;
+  pagingCount: number;
+}
+
+const Pagination = ({
+  totalPage = 1,
+  currentPage = 1,
+  setCurrentPage,
+  pagingCount = 5,
+}: PaginationProps) => {
+  if (!totalPage) return null;
+
+  const totalPageSet = Math.ceil(totalPage / pagingCount);
+  const curPageSet = Math.ceil(currentPage / pagingCount);
+
   return (
     <Container>
-      <Button disabled>
+      <Button
+        onClick={() => setCurrentPage((curPageSet - 1) * pagingCount)}
+        disabled={curPageSet === 1}
+      >
         <VscChevronLeft />
       </Button>
       <PageWrapper>
-        {[1, 2, 3, 4, 5].map((page) => (
-          <Page key={page} selected={page === 1} disabled={page === 1}>
-            {page}
-          </Page>
-        ))}
+        {Array(pagingCount)
+          .fill((curPageSet - 1) * pagingCount)
+          .map((page, i) => {
+            const cur = page + i + 1;
+            return (
+              <Page
+                key={cur}
+                selected={cur === currentPage}
+                disabled={cur === currentPage || cur > totalPage}
+                onClick={() => setCurrentPage(cur)}
+              >
+                {cur}
+              </Page>
+            );
+          })}
       </PageWrapper>
-      <Button disabled={false}>
+      <Button
+        onClick={() => setCurrentPage(curPageSet * pagingCount + 1)}
+        disabled={curPageSet === totalPageSet}
+      >
         <VscChevronRight />
       </Button>
     </Container>
@@ -52,8 +85,8 @@ type PageType = {
 
 const Page = styled.button<PageType>`
   padding: 4px 6px;
-  background-color: ${({ selected }) => (selected ? '#000' : 'transparent')};
-  color: ${({ selected }) => (selected ? '#fff' : '#000')};
+  background-color: ${({ selected }) => (selected ? "#000" : "transparent")};
+  color: ${({ selected }) => (selected ? "#fff" : "#000")};
   font-size: 20px;
 
   & + & {
