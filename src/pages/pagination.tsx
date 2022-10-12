@@ -4,7 +4,6 @@ import type { NextPage } from "next";
 import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 
-import products from "../api/data/products.json";
 import ProductList from "../components/ProductList";
 import Pagination from "../components/Pagination";
 import Header from "../components/Header";
@@ -16,7 +15,6 @@ const PaginationPage: NextPage = () => {
   const router = useRouter();
   const { page } = router.query;
   const [productList, setProductList] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const { userInfo, setUserInfo } = useContext(WrapperContext);
   const { setCurrentPage, totalPages, setTotalCount } = usePagination(
@@ -36,30 +34,26 @@ const PaginationPage: NextPage = () => {
       .catch(() => {
         setIsError(true);
       });
-
-    if (!isLoading) setIsLoading(true);
   }, [page]);
 
   return (
     <>
       <Header userInfo={userInfo} setUserInfo={setUserInfo} />
-      {isLoading ? (
-        <Container>
-          {!isError ? (
-            <>
-              <ProductList products={productList} />
-              <Pagination
-                totalPage={totalPages}
-                currentPage={Number(page)}
-                setCurrentPage={setCurrentPage}
-                pagingCount={5}
-              />
-            </>
-          ) : (
-            "존재하지 않는 페이지입니다."
-          )}
-        </Container>
-      ) : null}
+      <Container>
+        {!isError ? (
+          <>
+            <ProductList products={productList} />
+            <Pagination
+              totalPage={totalPages}
+              currentPage={Number(page)}
+              setCurrentPage={setCurrentPage}
+              pagingCount={5}
+            />
+          </>
+        ) : (
+          "존재하지 않는 페이지입니다."
+        )}
+      </Container>
     </>
   );
 };

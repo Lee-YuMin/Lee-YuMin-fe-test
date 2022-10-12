@@ -35,11 +35,11 @@ const Thumbnail = styled.img`
   height: 180px;
 `;
 
-const Name = styled.article`
+const Name = styled.div`
   margin-top: 8px;
   font-size: 16px;
 `;
 
-const Price = styled.article`
+const Price = styled.div`
   margin-top: 4px;
 `;

@@ -15,6 +15,8 @@ const Pagination = ({
   setCurrentPage,
   pagingCount = 5,
 }: PaginationProps) => {
+  if (!totalPage) return null;
+
   const totalPageSet = Math.ceil(totalPage / pagingCount);
   const curPageSet = Math.ceil(currentPage / pagingCount);
 
